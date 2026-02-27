@@ -58,38 +58,107 @@ Diagram](Architecture.png)
 
 ------------------------------------------------------------------------
 
-## Deployment
+## Deployment Steps
+
+# Create Docker Image
+
+``` bash
+cd microservice
+docker build -t <repository_name>:latest .
+docker push <repository_name>
+```
+
+# Deploy EKS Cluster Using Terraform
+
+``` bash
+cd terraform
+terraform init
+terraform plan
+terraform apply
+```
+
+# Connect kubectl to EKS
+
+``` bash
+aws eks update-kubeconfig --region <region> --name <cluster_name>
+``` 
+
+# Deploy Using minikube
+
+``` bash
+Install minikube on local terminal
+```
+
+# Create JWT Secrets and ADMIN_PASSWORD
 
 ``` bash
 export JWT_SECRET=$(openssl rand -hex 32)
+export ADMIN_PASSWORD=$(openssl rand -base64 16)
+```
 
-helm upgrade --install user-service ./helm/user-service
-helm upgrade --install kong ./helm/kong --set jwtSecret=$JWT_SECRET
+# Deploy User Service, Kong and Envoy via Helm
+
+``` bash
+helm upgrade --install user-service ./helm/user-service --set jwtSecret="$JWT_SECRET" --set adminPassword="$ADMIN_PASSWORD"
+helm upgrade --install kong ./helm/kong --set jwtSecret="$JWT_SECRET"
 helm upgrade --install envoy ./helm/envoy
+```
+
+# Verify Running Pod ad Services
+
+``` bash
+kubectl get pod
+kubectl get svc
 ```
 
 ------------------------------------------------------------------------
 
-## Testing
-
-### Get Token
+## Functional Verification/Testing 
 
 ``` bash
-curl -X POST $KONG_URL/login   -H "Content-Type: application/json"   -d '{"username":"admin","password":"admin"}'
+minikube ip
+export URL=http://<minikube_ip:envoy_port>
 ```
 
-### Access Protected API
+# 1. Health Check Status
 
 ``` bash
-curl $KONG_URL/users -H "Authorization: Bearer <TOKEN>"
+curl $URL/health
 ```
 
-### DDoS Simulation
+# 2. Get Token
 
 ``` bash
-ab -n 100 -c 20 $KONG_URL/users
+curl -X POST $KONG_URL/login -H "Content-Type: application/json" -d '{"username":"admin","password":"'$ADMIN_PASSWORD'"}'
 ```
 
+# 3. Test Access Protected API With and Without Token
+
+``` bash
+curl $URL/users
+curl $URL/users -H "Authorization: Bearer <TOKEN>"
+```
+
+# 4. Validate Token
+
+``` bash
+curl $URL/verify
+curl $URL/verify -H "Authorization: Bearer <TOKEN>"
+```
+
+# 5. Test Rate Limiting (10 per minute)
+
+``` bash
+for i in {1..15}; do
+  curl -s -o /dev/null -w "%{http_code}\n" $URL/health
+done
+```
+
+# 6. DDoS Simulation
+
+``` bash
+ab -n 10 -c 5 -k $URL/
+```
 ------------------------------------------------------------------------
 
 ## Project Structure
