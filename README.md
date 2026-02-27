@@ -139,7 +139,7 @@ curl $URL/users
 curl $URL/users -H "Authorization: Bearer <TOKEN>"
 ```
 
-# 4. Validate Token
+4. Validate Token
 
 ``` bash
 curl $URL/verify
