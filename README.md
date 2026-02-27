@@ -163,7 +163,48 @@ ab -n 10 -c 5 -k $URL/
 
 ## Project Structure
 
-<pre> ```text # Project Structure ├── Architecture.png ├── README.md ├── ai-usage.md ├── helm │ ├── envoy │ │ ├── Chart.yaml │ │ ├── envoy.yaml │ │ ├── templates │ │ │ ├── configmap.yaml │ │ │ ├── deployment.yaml │ │ │ └── service.yaml │ │ └── values.yaml │ ├── kong │ │ ├── Chart.yaml │ │ ├── kong.yaml │ │ ├── plugins │ │ │ └── custom.lua │ │ ├── templates │ │ │ ├── configmap.yaml │ │ │ ├── deployment.yaml │ │ │ ├── secret.yaml │ │ │ └── service.yaml │ │ └── values.yaml │ └── user-service │ ├── Chart.yaml │ ├── templates │ │ ├── deployment.yaml │ │ ├── secret.yaml │ │ └── service.yaml │ └── values.yaml ├── microservice │ ├── Dockerfile │ ├── app │ │ └── main.py │ └── requirements.txt └── terraform ├── main.tf ├── outputs.tf ├── terraform.tfvars └── variables.tf ``` </pre>
+``` bash
+├── Architecture.png
+├── README.md
+├── ai-usage.md
+├── helm
+│   ├── envoy
+│   │   ├── Chart.yaml
+│   │   ├── envoy.yaml
+│   │   ├── templates
+│   │   │   ├── configmap.yaml
+│   │   │   ├── deployment.yaml
+│   │   │   └── service.yaml
+│   │   └── values.yaml
+│   ├── kong
+│   │   ├── Chart.yaml
+│   │   ├── kong.yaml
+│   │   ├── plugins
+│   │   │   └── custom.lua
+│   │   ├── templates
+│   │   │   ├── configmap.yaml
+│   │   │   ├── deployment.yaml
+│   │   │   ├── secret.yaml
+│   │   │   └── service.yaml
+│   │   └── values.yaml
+│   └── user-service
+│       ├── Chart.yaml
+│       ├── templates
+│       │   ├── deployment.yaml
+│       │   ├── secret.yaml
+│       │   └── service.yaml
+│       └── values.yaml
+├── microservice
+│   ├── Dockerfile
+│   ├── app
+│   │   └── main.py
+│   └── requirements.txt
+└── terraform
+    ├── main.tf
+    ├── outputs.tf
+    ├── terraform.tfvars
+    └── variables.tf
+```
 
 ------------------------------------------------------------------------
 
