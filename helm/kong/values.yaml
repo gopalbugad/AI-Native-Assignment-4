@@ -1,0 +1,5 @@
+image:
+  repository: kong
+  tag: "3.6"
+
+jwtSecret: ""

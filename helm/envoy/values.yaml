@@ -1,0 +1,20 @@
+replicaCount: 1
+
+image:
+  repository: envoyproxy/envoy
+  tag: v1.29-latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  port: 10000
+  nodePort: 30008
+
+rateLimit:
+  maxTokens: 20
+  tokensPerFill: 20
+  fillInterval: 1s
+
+backend:
+  host: kong
+  port: 8000

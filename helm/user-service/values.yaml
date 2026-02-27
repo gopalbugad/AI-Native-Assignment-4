@@ -1,0 +1,6 @@
+image:
+  repository: gopalb21/user-service-repo
+  tag: latest
+
+jwtSecret: ""
+adminPassword: ""

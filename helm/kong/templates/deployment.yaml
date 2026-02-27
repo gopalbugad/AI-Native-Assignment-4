@@ -1,0 +1,134 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kong
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kong
+  template:
+    metadata:
+      labels:
+        app: kong
+    spec:
+      containers:
+        - name: kong
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: 8000
+          env:
+            - name: KONG_DATABASE
+              value: "off"
+
+            - name: KONG_DECLARATIVE_CONFIG
+              value: "/kong/kong.yaml"
+
+            - name: KONG_PROXY_ACCESS_LOG
+              value: "/dev/stdout"
+
+            - name: KONG_ADMIN_ACCESS_LOG
+              value: "/dev/stdout"
+
+            - name: KONG_PROXY_ERROR_LOG
+              value: "/dev/stderr"
+
+            - name: KONG_ADMIN_ERROR_LOG
+              value: "/dev/stderr"
+
+            - name: KONG_LOG_LEVEL
+              value: "info"
+
+            - name: KONG_PLUGINS
+              value: "bundled"
+
+            - name: KONG_NGINX_MAIN_ENV
+              value: "JWT_SECRET"
+
+            - name: KONG_ENVIRONMENT
+              value: "production"
+
+            - name: KONG_LUA_PACKAGE_PATH
+              value: "/usr/local/share/lua/5.1/?.lua;;"
+
+            # Inject JWT secret from Kubernetes Secret
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: kong-secret
+                  key: JWT_SECRET
+
+          volumeMounts:
+            - name: kong-config
+              mountPath: /kong
+
+      volumes:
+        - name: kong-config
+          configMap:
+            name: kong-config
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: kong
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: kong
+#   template:
+#     metadata:
+#       labels:
+#         app: kong
+#     spec:
+#       containers:
+#         - name: kong
+#           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+#           env:
+#             - name: KONG_DATABASE
+#               value: "off"
+#             - name: KONG_DECLARATIVE_CONFIG
+#               value: "/kong/kong.yaml"
+#             - name: JWT_SECRET
+#               valueFrom:
+#                 secretKeyRef:
+#                   name: kong-secret
+#                   key: JWT_SECRET
+#           volumeMounts:
+#             - name: kong-config
+#               mountPath: /kong
+#       volumes:
+#         - name: kong-config
+#           configMap:
+#             name: kong-config
