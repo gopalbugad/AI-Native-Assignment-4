@@ -1,3 +1,10 @@
+## ChatGPT Chat Link - 
+``` bash
+Link 1 - https://chatgpt.com/share/69a3ea85-5d24-8009-8e50-2a82cdb18282
+
+Link 2 - https://chatgpt.com/share/69a3eaa5-ff38-8009-a784-8278cdc8c541
+```
+
 ### 1. Prompt - 
 
 ``` bash
